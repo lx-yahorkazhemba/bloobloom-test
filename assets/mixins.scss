@@ -1,0 +1,6 @@
+@mixin common-animation($name, $timingFunc: ease-out, $duration: 0.3s) {
+  animation-name: $name;
+  animation-fill-mode: forwards;
+  animation-duration: $duration;
+  animation-timing-function: $timingFunc;
+}

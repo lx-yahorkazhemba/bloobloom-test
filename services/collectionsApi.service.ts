@@ -19,7 +19,8 @@ export default {
           number: pageNumber,
         },
         filters: {
-          ...filters,
+          glass_variant_frame_variant_colour_tag_configuration_names: [...filters.colour],
+          glass_variant_frame_variant_frame_tag_configuration_names: [...filters.shape],
           lens_variant_prescription: ["fashion"],
           lens_variant_types: ["classic"],
           frame_variant_home_trial_available: false,

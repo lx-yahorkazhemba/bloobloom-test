@@ -30,13 +30,13 @@ export default {
   align-items: center;
   flex-wrap: wrap;
   justify-content: center;
-  background: black;
+  background: $primary;
 
   h1 {
     font-size: 30px;
     letter-spacing: 0.5px;
     text-transform: uppercase;
-    color: white;
+    color: $secondary;
   }
 
   .back-btn {
@@ -44,7 +44,7 @@ export default {
     justify-content: center;
 
     a {
-      color: white;
+      color: $secondary;
     }
   }
 }

@@ -1,0 +1,53 @@
+@keyframes main-menu-appearance {
+  0% {
+    transform: translateX(-$menu_width);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+
+@keyframes main-menu-disappearance {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-$menu_width);
+  }
+}
+
+@keyframes filters-appearance {
+  0% {
+    height: 0;
+  }
+  100% {
+    height: $filters_height;
+  }
+}
+
+@keyframes filters-disappearance {
+  0% {
+    height: $filters_height;
+  }
+  100% {
+    height: 0;
+  }
+}
+
+@keyframes sub-menu-appearance {
+  0% {
+    width: 0;
+  }
+  100% {
+    width: $menu_width;
+  }
+}
+
+@keyframes sub-menu-disappearance {
+  0% {
+    width: $menu_width;
+  }
+  100% {
+    width: 0;
+  }
+}
