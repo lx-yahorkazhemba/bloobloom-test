@@ -1,18 +1,4 @@
-enum CollectionColor {
-  black = "black",
-  tortoise = "tortoise",
-  coloured = "coloured",
-  crystal = "crystal",
-  dark = "dark",
-  bright = "bright",
-}
-
-enum CollectionShape {
-  square = "square",
-  rectangle = "rectangle",
-  round = "round",
-  "cat-eye" = "cat-eye",
-}
+import { ECollectionColor, ECollectionShape } from "~/constants";
 
 interface IMedia {
   file_location: "colours" | "glass_variants";
@@ -50,7 +36,7 @@ interface IGlassVariant {
   media: IMedia[];
 }
 
-interface IGlass {
+export interface IGlasses {
   configuration_name: string;
   cost_breakdown: {
     [key: string]: number;
@@ -62,12 +48,12 @@ interface IGlass {
 }
 
 export interface ICollectionFilters {
-  colour: CollectionColor[];
-  shape: CollectionShape[];
+  colour: ECollectionColor[];
+  shape: ECollectionShape[];
 }
 
 export interface IGetCollectionResponse {
-  glasses: IGlass[];
+  glasses: IGlasses[];
   meta: {
     total_count: number;
   };

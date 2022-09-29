@@ -13,24 +13,22 @@
 </template>
 
 <script lang="ts">
-export default {
+import { defineComponent } from "vue";
+
+export default defineComponent({
   name: "AppHeader",
   props: {
-    handleMenuShow: {
-      type: Function,
-      default: () => {},
-    },
     showMenu: {
       type: Boolean,
       default: false,
     },
   },
   methods: {
-    onShowMenu(event, value) {
+    onShowMenu(event: MouseEvent, value: boolean) {
       this.$emit("handleMenuShow", event, value);
     },
   },
-};
+});
 </script>
 
 <style lang="scss" scoped>

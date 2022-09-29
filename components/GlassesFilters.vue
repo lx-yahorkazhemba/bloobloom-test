@@ -4,19 +4,30 @@
       <div class="filter-options">
         <GlassesFilter
           v-for="filter in availableFilters"
-          :filter="filter"
           :key="filter.id"
+          :filter="filter"
           :handle-filters-change="handleFiltersChange"
           :selected-filters="selectedFilters"
         />
       </div>
-      <div class="results-amount">{{ count }} RESULTS FOUND</div>
+      <div class="filters-results">
+        <div class="selected-filters">
+          <div v-for="filter in selectedFiltersList" :key="filter.id" class="filter-option">
+            <div class="filter-option-name">{{ filter.value }}</div>
+            <div class="remove-filter-btn" @click="handleFiltersChange(filter)">&#10006;</div>
+          </div>
+        </div>
+        <div class="filters-results-count">{{ count }} RESULTS FOUND</div>
+      </div>
     </div>
   </Transition>
 </template>
 
 <script lang="ts">
-export default {
+import { defineComponent } from "vue";
+import { ECollectionColor, ECollectionShape, TFilter } from "~/constants";
+
+export default defineComponent({
   name: "GlassesFilters",
 
   props: {
@@ -38,12 +49,19 @@ export default {
       default: 0,
     },
   },
-  methods: {
-    isOptionSelected(id) {
-      return !!this.selectedFilters[this.filter.id].includes(id);
+  computed: {
+    selectedFiltersList(): TFilter[] {
+      return Object.entries(this.selectedFilters)
+        .map(([id, selectedValues]) => {
+          return selectedValues.map((value: ECollectionColor | ECollectionShape) => ({
+            id,
+            value,
+          }));
+        })
+        .flat();
     },
   },
-};
+});
 </script>
 
 <style lang="scss" scoped>
@@ -54,13 +72,48 @@ export default {
     display: flex;
   }
 
-  .results-amount {
+  .filters-results {
     border-top: $border_style;
     border-bottom: none;
-    padding: 21px 30px;
+    padding: 10px 30px;
     font-size: 15px;
     text-align: center;
     font-weight: 600;
+    position: relative;
+
+    .selected-filters {
+      width: 30%;
+      display: flex;
+      flex-wrap: wrap;
+      min-height: 40px;
+
+      .filter-option {
+        display: flex;
+        min-width: 80px;
+        margin-right: 10px;
+        align-items: center;
+
+        &-name {
+          padding: 10px;
+          text-transform: uppercase;
+          font-weight: normal;
+          font-size: 13px;
+        }
+
+        .remove-filter-btn {
+          position: relative;
+          bottom: 1px;
+          font-size: 10px;
+          cursor: pointer;
+        }
+      }
+    }
+
+    &-count {
+      position: absolute;
+      top: calc(50% - 8px);
+      left: calc(50% - 35px);
+    }
   }
 }
 

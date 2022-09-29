@@ -7,8 +7,9 @@
   </div>
 </template>
 
-<script>
-export default {
+<script lang="ts">
+import { defineComponent } from "vue";
+export default defineComponent({
   name: "GlassesToolbar",
 
   props: {
@@ -21,19 +22,17 @@ export default {
       default: "",
     },
   },
-
+  computed: {
+    collectionTypeLabel(): string {
+      return this.collectionType.split("-").join(" ");
+    },
+  },
   methods: {
     onFilterShowChange() {
       this.$emit("handleFilterShow");
     },
   },
-
-  computed: {
-    collectionTypeLabel() {
-      return this.collectionType.split("-").join(" ");
-    },
-  },
-};
+});
 </script>
 
 <style lang="scss" scoped>

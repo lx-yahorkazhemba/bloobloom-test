@@ -6,7 +6,9 @@
 </template>
 
 <script lang="ts">
-export default {
+import { defineComponent } from "vue";
+
+export default defineComponent({
   props: {
     glass: {
       type: Object,
@@ -17,7 +19,7 @@ export default {
       default: false,
     },
   },
-};
+});
 </script>
 
 <style lang="scss" scoped>

@@ -10,7 +10,10 @@
 </template>
 
 <script lang="ts">
-export default {
+import { defineComponent } from "vue";
+import { IGlasses } from "~/services/collectionsApi.types";
+
+export default defineComponent({
   props: {
     glassesList: {
       type: Array,
@@ -20,11 +23,11 @@ export default {
     },
   },
   methods: {
-    getIsLastCard(index, cards) {
+    getIsLastCard(index: number, cards: IGlasses[]) {
       return cards.length - 1 === index;
     },
   },
-};
+});
 </script>
 
 <style lang="scss" scoped>

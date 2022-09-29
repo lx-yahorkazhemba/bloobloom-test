@@ -6,11 +6,11 @@
         v-for="option in filter.options"
         :key="option.id"
         :class="['option', { selected: isOptionSelected(option.id) }]"
-        @click="handleFiltersChange(filter.id, option.id)"
+        @click="handleFiltersChange({ id: filter.id, value: option.id })"
       >
         <div
-          :class="['option-img', { selected: isOptionSelected(option.id) }]"
           v-if="option.src"
+          :class="['option-img', { selected: isOptionSelected(option.id) }]"
           :style="{ backgroundImage: `url(${option.src})` }"
         ></div>
         {{ option.name }}
@@ -20,7 +20,9 @@
 </template>
 
 <script lang="ts">
-export default {
+import { defineComponent } from "vue";
+
+export default defineComponent({
   name: "GlassesFilter",
 
   props: {
@@ -38,11 +40,11 @@ export default {
     },
   },
   methods: {
-    isOptionSelected(id) {
+    isOptionSelected(id: "colour" | "shape") {
       return !!this.selectedFilters[this.filter.id].includes(id);
     },
   },
-};
+});
 </script>
 
 <style lang="scss" scoped>

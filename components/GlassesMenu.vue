@@ -16,7 +16,7 @@
             v-for="subOption in subOptionList"
             :key="subOption.id"
             class="menu-option"
-            @click="handleSelection($event, subOption.id)"
+            @click="handleSelection(subOption.id)"
           >
             {{ subOption.label }}
           </div>
@@ -27,15 +27,12 @@
 </template>
 
 <script lang="ts">
-import { SUB_OPTIONS_LIST, MENU_OPTIONS_LIST } from "~/constants";
+import { defineComponent } from "vue";
+import { SUB_OPTIONS_LIST, MENU_OPTIONS_LIST, EGlassesTypes, ESexTypes } from "~/constants";
 
-export default {
+export default defineComponent({
   name: "GlassesMenu",
   props: {
-    handleMenuShow: {
-      type: Function,
-      default: () => {},
-    },
     showMenu: {
       type: Boolean,
       default: false,
@@ -46,7 +43,7 @@ export default {
       optionList: MENU_OPTIONS_LIST,
       showSubMenu: false,
       subOptionList: SUB_OPTIONS_LIST,
-      currentGlassesType: null,
+      currentGlassesType: "",
     };
   },
   watch: {
@@ -55,29 +52,33 @@ export default {
     },
   },
   methods: {
-    handleShow(event) {
-      if (event.relatedTarget.id !== "menu-btn") {
+    handleShow(event: MouseEvent) {
+      const target = event?.relatedTarget as HTMLDivElement;
+
+      if (target.id !== "menu-btn") {
         this.$emit("handleMenuShow");
       }
     },
-    handleSubMenuShow(type, hasSubOptions) {
+    handleSubMenuShow(type: EGlassesTypes, hasSubOptions: boolean) {
       this.currentGlassesType = type;
       this.showSubMenu = hasSubOptions;
     },
     subMenuClose() {
-      this.currentGlassesType = null;
+      this.currentGlassesType = "";
       this.showSubMenu = false;
     },
-    handleSelection(type) {
+    handleSelection(type: ESexTypes) {
       const selection = `${this.currentGlassesType}-${type}`;
       this.$emit("handleMenuShow");
       this.$router.push(selection);
     },
-    handleSubMenuClose(event) {
-      if (event.relatedTarget.id === "menu-btn") this.subMenuClose();
+    handleSubMenuClose(event: MouseEvent) {
+      const target = event?.relatedTarget as HTMLDivElement;
+
+      if (target.id === "menu-btn") this.subMenuClose();
     },
   },
-};
+});
 </script>
 
 <style lang="scss" scoped>

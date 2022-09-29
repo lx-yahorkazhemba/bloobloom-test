@@ -8,18 +8,19 @@
     </div>
   </div>
 </template>
-<script>
-export default {
+
+<script lang="ts">
+import { defineComponent } from "vue";
+
+export default defineComponent({
   layout: "error",
   props: {
     error: {
-      type: {
-        message: String,
-        default: "Unknown error",
-      },
+      type: Object,
+      default: () => ({}),
     },
   },
-};
+});
 </script>
 
 <style lang="scss" scoped>
