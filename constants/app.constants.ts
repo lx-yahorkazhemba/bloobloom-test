@@ -35,3 +35,8 @@ type TShapeFilter = {
 };
 
 export type TFilter = TColourFilter | TShapeFilter;
+
+export type TSelectedFilters = {
+  colour: ECollectionColor[];
+  shape: ECollectionShape[];
+};

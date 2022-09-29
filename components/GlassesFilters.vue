@@ -6,15 +6,15 @@
           v-for="filter in availableFilters"
           :key="filter.id"
           :filter="filter"
-          :handle-filters-change="handleFiltersChange"
+          @toggle-filter="$emit('toggle-filter', $event)"
           :selected-filters="selectedFilters"
         />
       </div>
       <div class="filters-results">
         <div class="selected-filters">
-          <div v-for="filter in selectedFiltersList" :key="filter.id" class="filter-option">
+          <div v-for="filter in selectedFiltersList" :key="filter.value" class="filter-option">
             <div class="filter-option-name">{{ filter.value }}</div>
-            <div class="remove-filter-btn" @click="handleFiltersChange(filter)">&#10006;</div>
+            <div class="remove-filter-btn" @click="$emit('toggle-filter', filter)">&#10006;</div>
           </div>
         </div>
         <div class="filters-results-count">{{ count }} RESULTS FOUND</div>
@@ -31,10 +31,6 @@ export default defineComponent({
   name: "GlassesFilters",
 
   props: {
-    handleFiltersChange: {
-      type: Function,
-      default: () => {},
-    },
     selectedFilters: {
       type: Object,
       default: () => ({}),

@@ -6,7 +6,7 @@
         v-for="option in filter.options"
         :key="option.id"
         :class="['option', { selected: isOptionSelected(option.id) }]"
-        @click="handleFiltersChange({ id: filter.id, value: option.id })"
+        @click="$emit('toggle-filter', { id: filter.id, value: option.id })"
       >
         <div
           v-if="option.src"
@@ -29,10 +29,6 @@ export default defineComponent({
     filter: {
       type: Object,
       default: () => ({}),
-    },
-    handleFiltersChange: {
-      type: Function,
-      default: () => {},
     },
     selectedFilters: {
       type: Object,

@@ -5,12 +5,16 @@
       <GlassesToolbar :handle-filter-show="handleFilterShow" :collection-type="collectionType" />
       <GlassesFilters
         :available-filters="availableFilters"
-        :handle-filters-change="handleFiltersChange"
         :selected-filters="selectedFilters"
         :show-filters="showFilters"
         :count="count"
+        @toggle-filter="toggleFilter"
       />
-      <GlassesGrid :glasses-list="glassesList" />
+      <GlassesGrid
+        :glasses-list="glassesList"
+        :disable-infinite-scroll="disableInfiniteScroll"
+        @loadMore="loadMore"
+      />
       <GlassesMenu :show-menu="showMenu" @handleMenuShow="handleMenuShow" />
     </div>
   </div>
@@ -19,7 +23,13 @@
 <script lang="ts">
 import { defineComponent } from "vue";
 import collectionsApi from "~/services/collectionsApi.service";
-import { ECollectionColor, FILTERS_LIST, ECollectionShape, TFilter } from "~/constants";
+import {
+  FILTERS_LIST,
+  TFilter,
+  TSelectedFilters,
+  ECollectionColor,
+  ECollectionShape,
+} from "~/constants";
 import { IGlasses } from "~/services/collectionsApi.types";
 
 export default defineComponent({
@@ -28,13 +38,12 @@ export default defineComponent({
     showFilters: boolean;
     showMenu: boolean;
     availableFilters: typeof FILTERS_LIST;
-    selectedFilters: {
-      colour: ECollectionColor[];
-      shape: ECollectionShape[];
-    };
+    selectedFilters: TSelectedFilters;
     glassesList: IGlasses[];
     collectionType: string;
     count: number;
+    page: number;
+    disableInfiniteScroll: boolean;
   } {
     return {
       showFilters: false,
@@ -47,6 +56,8 @@ export default defineComponent({
       glassesList: [],
       collectionType: "",
       count: 0,
+      page: 1,
+      disableInfiniteScroll: false,
     };
   },
   async fetch() {
@@ -59,16 +70,21 @@ export default defineComponent({
       });
 
     if (!collection) return;
-
     this.glassesList = collection.glasses;
     this.collectionType = params.collection;
     this.count = collection.meta.total_count;
+    this.disableInfiniteScroll = this.glassesList.length === this.count;
   },
 
   watch: {
     selectedFilters: {
-      handler() {
-        this.makeRequest();
+      async handler() {
+        this.page = 1;
+        const collection = await this.fetchCollection(this.selectedFilters, this.page);
+
+        this.glassesList = collection.glasses;
+        this.count = collection.meta.total_count;
+        this.disableInfiniteScroll = this.glassesList.length === this.count;
       },
       deep: true,
     },
@@ -84,26 +100,41 @@ export default defineComponent({
         this.showMenu = !!value;
       }
     },
-    handleFiltersChange(event: TFilter) {
-      const index = this.selectedFilters[event.id].findIndex(
-        filterValue => filterValue === event.value,
+    toggleFilter(filter: TFilter) {
+      const index = this.selectedFilters[filter.id].findIndex(
+        (filterValue: ECollectionColor | ECollectionShape) => filterValue === filter.value,
       );
       if (index > -1) {
-        this.$delete(this.selectedFilters[event.id], index);
+        this.$delete(this.selectedFilters[filter.id], index);
       } else {
         // TODO: Find a good way to type filters update
-        (this.selectedFilters[event.id] as any).push(event.value);
+        (this.selectedFilters[filter.id] as any).push(filter.value);
       }
     },
-    async makeRequest() {
+    async fetchCollection(selectedFilters: TSelectedFilters, page: number) {
       const collection = await collectionsApi.getCollection(
         this.collectionType,
-        this.selectedFilters,
-        1,
+        selectedFilters,
+        page,
       );
 
-      this.glassesList = collection.glasses;
+      return collection;
+    },
+
+    async loadMore() {
+      if (this.glassesList.length === this.count) {
+        this.disableInfiniteScroll = true;
+        return;
+      }
+
+      this.page++;
+      this.disableInfiniteScroll = true;
+
+      const collection = await this.fetchCollection(this.selectedFilters, this.page);
+
+      this.glassesList.push(...collection.glasses);
       this.count = collection.meta.total_count;
+      this.disableInfiniteScroll = false;
     },
   },
 });

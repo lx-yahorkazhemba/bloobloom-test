@@ -6,6 +6,11 @@
       :glass="glass"
       :is-last-card="getIsLastCard(index, glassesList)"
     />
+    <div
+      v-infinite-scroll="loadMore"
+      infinite-scroll-disabled="disableInfiniteScroll"
+      infinite-scroll-distance="340"
+    ></div>
   </div>
 </template>
 
@@ -21,10 +26,17 @@ export default defineComponent({
         return [];
       },
     },
+    disableInfiniteScroll: {
+      type: Boolean,
+      default: false,
+    },
   },
   methods: {
     getIsLastCard(index: number, cards: IGlasses[]) {
       return cards.length - 1 === index;
+    },
+    loadMore() {
+      this.$emit("loadMore");
     },
   },
 });
